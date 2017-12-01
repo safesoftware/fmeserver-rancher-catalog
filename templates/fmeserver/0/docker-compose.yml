@@ -50,7 +50,6 @@ services:
     environment:
       - EXTERNALHOSTNAME=${EXTERNAL_HOSTNAME}
       - FME_ENV_ENGINE_QUEUES=ScaledEngines
-    mem_reservation: ${MEMORY_RESERVATION}
     labels:
       io.rancher.container.hostname_override: container_name
     
