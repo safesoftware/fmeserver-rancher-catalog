@@ -1,0 +1,24 @@
+version: 2
+catalog:
+  version: 5-1
+  minimum_rancher_version: 1.6.0
+  questions:
+  - variable: NFS_SERVER_IP
+    label: NFS server IP
+    description: IP will be assigned to NFS server container - choose wisely, if IP is not available mounting will fail.
+    required: true
+    default: 10.42.10.42
+    type: string
+
+
+services:
+  server:
+    retain_ip: true
+  driver:
+    storage_driver:
+      volumeAccessMode: multiHostRW
+      name: rancher-nfs
+      scope: environment
+      description: null
+      blockDevicePath: null
+    start_on_create: true

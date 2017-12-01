@@ -1,0 +1,6 @@
+name: NFS server for FME Server
+description: |
+  Deploys NFS server and driver to use with FME Server
+version: 4-1
+category: Storage
+maintainer: Grant Arnold <grant.arnold@safe.com>

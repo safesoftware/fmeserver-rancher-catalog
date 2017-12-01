@@ -1,0 +1,45 @@
+version: "2"
+services:
+  server:
+    privileged: true
+    image: safesoftware/nfs-server:latest
+    environment:
+      SHARED_DIRECTORY: /nfsshare
+    stdin_open: true
+    volumes:
+    - nfsdatavolume:/nfsshare
+    tty: true
+    ports:
+    - 2049:2049/tcp
+    labels:
+      io.rancher.container.requested_ip: ${NFS_SERVER_IP}
+
+  driver:
+    privileged: true
+    image: rancher/storage-nfs:v0.8.3
+    environment:
+      MOUNT_DIR: /
+      MOUNT_OPTS: ',nfsvers=4'
+      NFS_SERVER: ${NFS_SERVER_IP}
+      RANCHER_DEBUG: 'true'
+    volumes:
+    - /run:/run
+    - /var/run:/var/run
+    - /dev:/host/dev
+    - /var/lib/rancher/volumes:/var/lib/rancher/volumes:shared
+    logging:
+      driver: json-file
+      options:
+        max-file: '2'
+        max-size: 25m
+    pid: host
+    labels:
+      io.rancher.container.agent.role: environment
+      io.rancher.container.create_agent: 'true'
+      io.rancher.scheduler.global: 'true'
+    depends_on:
+      - server
+
+volumes:
+   nfsdatavolume:
+      driver: local

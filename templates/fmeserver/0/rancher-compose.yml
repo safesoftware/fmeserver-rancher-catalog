@@ -1,0 +1,16 @@
+version: "2"
+catalog:
+  version: 1
+  minimum_rancher_version: 1.6.0
+  questions:
+    - variable: BUILD
+      label: Build Number
+      description: The build number of the FME Server to deploy
+      required: true
+      default: 18199
+      type: string
+    - variable: EXTERNAL_HOSTNAME
+      label: FME Server external hostname
+      required: true
+      default: localhost
+      type: string

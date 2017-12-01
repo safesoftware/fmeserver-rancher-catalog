@@ -1,0 +1,6 @@
+name: FME Server
+description: |
+  Deploys FME Server in Rancher
+version: 1
+category: FME
+maintainer: Grant Arnold <grant.arnold@safe.com>

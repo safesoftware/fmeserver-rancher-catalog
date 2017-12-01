@@ -1,0 +1,62 @@
+version: "2"
+services:
+  fmeserverdb:
+    image: safesoftware/fmeserver-db:${BUILD}
+    volumes:
+      - database:/var/lib/postgresql/data
+    restart: always
+
+  fmeservercore:
+    image: safesoftware/fmeserver-core:${BUILD}
+    volumes:
+      - fmeserver:/data/fmeserverdata
+      - testvolume:/test
+    ports:
+      - "25:7125"
+      - 7078:7078
+    hostname: fmeservercore
+    restart: always
+    depends_on: 
+      - fmeserverdb
+      - fmeserverqueue
+
+  fmeserverweb:
+    image: safesoftware/fmeserver-web:${BUILD}
+    volumes:
+      - fmeserver:/data/fmeserverdata
+    ports:
+      - 80:8080
+    environment:
+      - EXTERNALHOSTNAME=${EXTERNAL_HOSTNAME}
+    hostname: fmeserverweb
+    restart: always
+    depends_on: 
+      - fmeservercore
+      
+  fmeserverqueue:
+    image: safesoftware/fmeserver-queue:${BUILD}
+    hostname: fmeserverqueue
+    volumes:
+      - fmeserver:/data/fmeserverdata
+    restart: always
+ 
+  fmeserverengine:
+    image: safesoftware/fmeserver-engine:${BUILD}
+    volumes:
+      - fmeserver:/data/fmeserverdata
+    restart: always
+    depends_on: 
+      - fmeservercore
+    environment:
+      - EXTERNALHOSTNAME=${EXTERNAL_HOSTNAME}
+      - FME_ENV_ENGINE_QUEUES=ScaledEngines
+    mem_reservation: ${MEMORY_RESERVATION}
+    labels:
+      io.rancher.container.hostname_override: container_name
+    
+volumes:
+   database:
+      driver: local
+   fmeserver:
+      driver: rancher-nfs
+ 
