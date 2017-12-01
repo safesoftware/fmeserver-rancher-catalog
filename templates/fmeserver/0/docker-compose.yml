@@ -49,7 +49,6 @@ services:
       - fmeservercore
     environment:
       - EXTERNALHOSTNAME=${EXTERNAL_HOSTNAME}
-      - FME_ENV_ENGINE_QUEUES=ScaledEngines
     labels:
       io.rancher.container.hostname_override: container_name
     
